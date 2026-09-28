@@ -4,17 +4,19 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 export default function Home() {
-  const containerRef = useRef<HTmrDivElement>(null);
-  const headerRefs = useRef<HTmrHeadingElement[]>([]);
-  const stripeRefs = useRef<HTmrDivElement[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRefs = useRef<HTMLDivElement[]>([]);
+  const stripeRefs = useRef<HTMLDivElement[]>([]);
+  const starRef = useRef<SVGSVGElement>(null);
+  const triangleRef = useRef<SVGSVGElement>(null);
 
-  const addToRefs = (el: HTmrHeadingElement | null) => {
+  const addToRefs = (el: HTMLHeadingElement | null) => {
     if (el && !headerRefs.current.includes(el)) {
       headerRefs.current.push(el);
     }
   };
 
-  const addStripeRef = (el: HTmrDivElement | null) => {
+  const addStripeRef = (el: HTMLDivElement | null) => {
     if (el && !stripeRefs.current.includes(el)) {
       stripeRefs.current.push(el);
     }
@@ -49,6 +51,19 @@ export default function Home() {
               stagger: 0.15,
               duration: 0.9,
             });
+            tl.from(
+              triangleRef.current,
+              {
+                y: "-100vh",
+                duration: 1,
+              },
+              "-=0.5"
+            );
+            tl.from(starRef.current, {
+              scale: 0,
+              transformOrigin: "center center",
+              duration: 1,
+            }, "-=0.5");
           } else {
             // Desktop: horizontal bands, unfurl left to right
             tl.from(stripeRefs.current, {
@@ -57,6 +72,20 @@ export default function Home() {
               stagger: 0.15,
               duration: 0.9,
             });
+            tl.from(
+              triangleRef.current,
+              {
+                x: "-100vw",
+                transformOrigin: "left center",
+                duration: 1,
+              },
+              "-=0.5"
+            );
+            tl.from(starRef.current, {
+              scale: 0,
+              transformOrigin: "center center",
+              duration: 1,
+            }, "-=0.5");
           }
 
           tl.from(
@@ -76,6 +105,29 @@ export default function Home() {
     return () => ctx.revert();
   }, []);
 
+  const triangleSVG = `
+  <svg viewBox="0 0 100 100">
+    <polygon points="50,0 0,100 100,100" />
+  </svg>
+  `;
+
+  const starSVG = `
+  <svg viewBox="0 0 100 100">
+    <polygon points="
+      50,0 
+      61,35 
+      98,35 
+      68,57 
+      79,100 
+      50,75 
+      21,100 
+      32,57 
+      2,35 
+      39,35
+    "/>
+  </svg>
+  `;
+
   return (
     <div
       ref={containerRef}
@@ -86,6 +138,34 @@ export default function Home() {
         <div ref={addStripeRef} className="flex-1 bg-primary" />
         <div ref={addStripeRef} className="flex-1 bg-white" />
         <div ref={addStripeRef} className="flex-1 bg-foreground" />
+        <svg
+          ref={starRef}
+          className="text-primary z-6 w-60 rotate-25 h-screen absolute top-0 left-1/12"
+          viewBox="0 0 100 100"
+          fill="currentColor"
+        >
+          <polygon points="
+            50,0
+            61.8,35.5
+            100,38.2
+            70.9,61.8
+            81,100
+            50,78
+            19,100
+            29.1,61.8
+            0,38.2
+            38.2,35.5
+          "/>
+        </svg>
+        <svg
+          ref={triangleRef}
+          className="text-accent z-4 h-screen absolute top-0 left-0"
+          viewBox="0 0 100 100"
+          fill="currentColor"
+        >
+          <polygon className="max-md:hidden" points="0,0 0,100 60,50" />
+          <polygon className="md:hidden" points="0,0 100,0 50,60" />
+        </svg>
       </div>
 
       {/* Text content on top */}
