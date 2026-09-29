@@ -1,16 +1,19 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { GSDevTools } from "gsap/GSDevTools";
 
-gsap.registerPlugin(GSDevTools);
+const links = ["Services", "Events", "Contact"];
 
 const Header = () => {
   const containerRef = useRef<HTMLElement>(null);
-  const navRefs = useRef<HTMLDivElement[]>([]);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
-  const addToRefs = (el: HTMLDivElement | null) => {
+  const navRefs = useRef<HTMLSpanElement[]>([]);
+
+  const addToRefs = (el: HTMLSpanElement | null) => {
     if (el && !navRefs.current.includes(el)) {
       navRefs.current.push(el);
     }
@@ -18,74 +21,67 @@ const Header = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        delay: 0.7,
-        defaults: {
-          duration: 0.8,
-          ease: "power2.out",
-        },
-      });
-
-      tl.from(navRefs.current, {
+      gsap.from(navRefs.current, {
         xPercent: -120,
         stagger: 0.08,
+        delay: 0.7,
+        duration: 0.8,
+        ease: "power2.out",
       });
-
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  const onHoverEnter = (el: HTMLDivElement) => {
-    const tl = gsap.timeline();
+  // Hover lives on the pill; the text inside is what rolls
+  const onHoverEnter = (pill: HTMLElement) => {
+    const text = pill.firstElementChild;
+    if (!text || gsap.isTweening(text)) return;
 
-    tl.to(el, {
-      yPercent: -120,
-      duration: 0.15,
-      ease: "power2.in",
-    })
-    .set(el, {
-      yPercent: 120,
-    })
-    .to(el, {
-      yPercent: 0,
-      duration: 0.15,
-      ease: "power2.out",
-    });
+    gsap
+      .timeline()
+      .to(text, { yPercent: -120, duration: 0.15, ease: "power2.in" })
+      .set(text, { yPercent: 120 })
+      .to(text, { yPercent: 0, duration: 0.15, ease: "power2.out" });
   };
 
   return (
     <header
       ref={containerRef}
-      className="fixed top-0 left-0 right-0 z-10 text-foreground flex items-center justify-center md:gap-20 gap-6 p-4 mt-4"
+      className={`
+        fixed z-10 text-foreground flex items-center
+        ${
+          isHome
+            ? "top-6 w-[50%] right-0 justify-center gap-3"
+            : "top-0 left-0 right-0 justify-center md:gap-6 gap-3 p-4 mt-4"
+        }
+      `}
     >
-      <div className="overflow-hidden cursor-pointer">
+      {links.map((label) => (
         <div
-          ref={addToRefs}
+          key={label}
           onMouseEnter={(e) => onHoverEnter(e.currentTarget)}
-          className="text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] font-bold text-foreground"
+          onClick={() => {
+          }}
+          className="
+            overflow-hidden cursor-pointer rounded-full
+            border border-foreground/20 bg-foreground/[0.03] backdrop-blur-sm
+            transition-all duration-300 ease-out
+            hover:border-foreground/60 hover:bg-foreground/10
+            active:scale-95
+          "
         >
-          Services
+          <span
+            ref={addToRefs}
+            className="
+              block px-5 py-2 tracking-wide
+              text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] font-semibold text-foreground
+            "
+          >
+            {label}
+          </span>
         </div>
-      </div>
-      <div className="overflow-hidden cursor-pointer">
-        <div
-          ref={addToRefs}
-          onMouseEnter={(e) => onHoverEnter(e.currentTarget)}
-          className="text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] font-bold text-foreground"
-        >
-          Events
-        </div>
-      </div>
-      <div className="overflow-hidden cursor-pointer">
-        <div
-          ref={addToRefs}
-          onMouseEnter={(e) => onHoverEnter(e.currentTarget)}
-          className="text-[clamp(0.875rem,1vw+0.5rem,1.125rem)] font-bold text-foreground"
-        >
-          Contact
-        </div>
-      </div>
+      ))}
     </header>
   );
 };

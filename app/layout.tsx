@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import localFont from "next/font/local";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const erodeH = localFont({
+  src: "../fonts/Erode_Complete/Fonts/WEB/fonts/Erode-Semibold.woff2",
+  variable: "--font-erode-bold",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const erodeP = localFont({
+  src: "../fonts/Erode_Complete/Fonts/WEB/fonts/Erode-Light.woff2",
+  variable: "--font-erode",
+  display: "swap",
 });
-
 export const metadata: Metadata = {
   title: "South Yemeni Community of Hamilton",
   description:
@@ -29,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${erodeH.variable} ${erodeP.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Header />
