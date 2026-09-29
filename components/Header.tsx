@@ -1,10 +1,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-const links = ["Services", "Events", "Contact"];
+const links = [
+  { label: "Services", href: "/services" },
+  { label: "Events", href: "/events" },
+  { label: "Contact", href: "/contact" },
+];
 
 const Header = () => {
   const containerRef = useRef<HTMLElement>(null);
@@ -48,14 +53,13 @@ const Header = () => {
   return (
     <header
       ref={containerRef}
-      className="fixed z-10 text-foreground flex items-center top-0 left-0 right-0 justify-center md:gap-6 gap-3 p-4 mt-4"
+      className="fixed z-20 text-foreground flex items-center top-0 left-0 right-0 justify-center md:gap-6 gap-3 p-4 mt-4"
     >
-      {links.map((label) => (
-        <div
+      {links.map(({ label, href }) => (
+        <Link
           key={label}
+          href={href}
           onMouseEnter={(e) => onHoverEnter(e.currentTarget)}
-          onClick={() => {
-          }}
           className="
             overflow-hidden cursor-pointer rounded-full
             border border-foreground/20 bg-foreground/[0.03] backdrop-blur-sm
@@ -73,7 +77,7 @@ const Header = () => {
           >
             {label}
           </span>
-        </div>
+        </Link>
       ))}
     </header>
   );
