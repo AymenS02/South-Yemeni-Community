@@ -48,14 +48,7 @@ const Header = () => {
   return (
     <header
       ref={containerRef}
-      className={`
-        fixed z-10 text-foreground flex items-center
-        ${
-          isHome
-            ? "top-6 w-[50%] right-0 justify-center gap-3"
-            : "top-0 left-0 right-0 justify-center md:gap-6 gap-3 p-4 mt-4"
-        }
-      `}
+      className="fixed z-10 text-foreground flex items-center top-0 left-0 right-0 justify-center md:gap-6 gap-3 p-4 mt-4"
     >
       {links.map((label) => (
         <div
