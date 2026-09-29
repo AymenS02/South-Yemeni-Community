@@ -297,6 +297,13 @@ export default function Home() {
                   points={STAR_POINTS}
                   className="fill-primary"
                 />
+
+                <image
+                  href="/Maple_Leaf.svg.webp"
+                  x="120"
+                  y="300"
+                  className="absolute top-0 left-0 z-10 h-15 w-15"
+                />
               </g>
 
               {/* Subtle outline */}
