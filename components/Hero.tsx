@@ -25,11 +25,25 @@ const STAR_POINTS = Array.from({ length: 10 }, (_, i) => {
   return `${x.toFixed(2)},${y.toFixed(2)}`;
 }).join(" ");
 
+const MAPLE_LEAF_CX = 150;
+const MAPLE_LEAF_CY = 80;
+
+const mapleLeaf = Array.from({ length: 10 }, (_, i) => {
+  const outer = 34;
+  const inner = 13;
+  const angle = ((-90 + 50 + i * 36) * Math.PI) / 180;
+  const radius = i % 2 === 0 ? outer : inner;
+  const x = MAPLE_LEAF_CX + radius * Math.cos(angle);
+  const y = MAPLE_LEAF_CY + radius * Math.sin(angle);
+  return `${x.toFixed(2)},${y.toFixed(2)}`;
+}).join(" ");
+
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const flagWrapRef = useRef<HTMLDivElement>(null);
   const headerRefs = useRef<HTMLElement[]>([]);
   const stripeRefs = useRef<SVGRectElement[]>([]);
+  const mapleLeafRef = useRef<SVGPolygonElement>(null);
   const starRef = useRef<SVGPolygonElement>(null);
   const triangleRef = useRef<SVGPolygonElement>(null);
 
@@ -87,6 +101,12 @@ export default function Home() {
             duration: 1,
             ease: "back.out(1.7)",
           },
+          "-=0.5"
+        );
+
+        tl.from(
+          mapleLeafRef.current,
+          { scale: 0, rotation: -120, svgOrigin: `${MAPLE_LEAF_CX} ${MAPLE_LEAF_CY}`, duration: 1, ease: "back.out(1.7)" },
           "-=0.5"
         );
 
@@ -299,6 +319,7 @@ export default function Home() {
                 />
 
                 <image
+                  ref={mapleLeafRef}
                   href="/Maple_Leaf.svg.webp"
                   x="120"
                   y="300"
